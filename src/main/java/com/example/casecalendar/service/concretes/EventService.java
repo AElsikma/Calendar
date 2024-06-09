@@ -14,8 +14,23 @@ public class EventService {
     private EventRepository eventRepository;
 
     public Event addEvent(Event event) {
+
+        if (event.getUser() == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        if (event.getTitle() == null || event.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be empty");
+        }
+        if (event.getStartDate() == null || event.getEndDate() == null) {
+            throw new IllegalArgumentException("Start and end dates cannot be null");
+        }
+        if (event.getStartDate().isAfter(event.getEndDate())) {
+            throw new IllegalArgumentException("Start date cannot be after end date");
+        }
+
         return eventRepository.save(event);
     }
+
 
     public List<Event> getDailyEvents(Long userId, LocalDateTime date) {
         LocalDateTime startOfDay = date.toLocalDate().atStartOfDay();
@@ -33,5 +48,8 @@ public class EventService {
         LocalDateTime startOfMonth = date.withDayOfMonth(1).toLocalDate().atStartOfDay();
         LocalDateTime endOfMonth = date.withDayOfMonth(date.toLocalDate().lengthOfMonth()).toLocalDate().atTime(23, 59, 59);
         return eventRepository.findByUserIdAndStartDateBetween(userId, startOfMonth, endOfMonth);
+    }
+    public List<Event> getAllEvents(Long userId) {
+        return eventRepository.findByUserId(userId);
     }
 }

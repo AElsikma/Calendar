@@ -17,6 +17,12 @@ public class EventController {
 
     @PostMapping("/add")
     public Event addEvent(@RequestBody Event event) {
+        if (event == null) {
+            throw new IllegalArgumentException("Event cannot be null");
+        }
+        if (event.getUser() == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
         return eventService.addEvent(event);
     }
 
@@ -36,5 +42,9 @@ public class EventController {
     public List<Event> getMonthlyEvents(@PathVariable Long userId, @RequestParam String date) {
         LocalDateTime localDateTime = LocalDateTime.parse(date);
         return eventService.getMonthlyEvents(userId, localDateTime);
+    }
+    @GetMapping("/all/{userId}")
+    public List<Event> getAllEvents(@PathVariable Long userId) {
+        return eventService.getAllEvents(userId);
     }
 }
