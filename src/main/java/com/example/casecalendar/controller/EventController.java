@@ -43,6 +43,23 @@ public class EventController {
         LocalDateTime localDateTime = LocalDateTime.parse(date);
         return eventService.getMonthlyEvents(userId, localDateTime);
     }
+
+
+    @PutMapping("/update/{eventId}")
+    public Event updateEvent(@PathVariable Long eventId, @RequestBody Event updatedEvent) {
+        if (updatedEvent == null) {
+            throw new IllegalArgumentException("Updated event cannot be null");
+        }
+        if (updatedEvent.getUser() == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        return eventService.updateEvent(eventId, updatedEvent);
+    }
+
+    @DeleteMapping("/delete/{eventId}")
+    public void deleteEvent(@PathVariable Long eventId) {
+        eventService.deleteEvent(eventId);
+    }
     @GetMapping("/all/{userId}")
     public List<Event> getAllEvents(@PathVariable Long userId) {
         return eventService.getAllEvents(userId);

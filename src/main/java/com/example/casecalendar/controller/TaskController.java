@@ -36,4 +36,24 @@ public class TaskController {
         LocalDateTime localDateTime = LocalDateTime.parse(date);
         return taskService.getMonthlyTasks(userId, localDateTime);
     }
+    @PutMapping("/update/{taskId}")
+    public Task updateTask(@PathVariable Long taskId, @RequestBody Task updatedTask) {
+        if (updatedTask == null) {
+            throw new IllegalArgumentException("Updated task cannot be null");
+        }
+        if (updatedTask.getUser() == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        return taskService.updateTask(taskId, updatedTask);
+    }
+
+    @DeleteMapping("/delete/{taskId}")
+    public void deleteTask(@PathVariable Long taskId) {
+        taskService.deleteTask(taskId);
+    }
+
+    @GetMapping("/all/{userId}")
+    public List<Task> getAllTasks(@PathVariable Long userId) {
+        return taskService.getAllTasks(userId);
+    }
 }

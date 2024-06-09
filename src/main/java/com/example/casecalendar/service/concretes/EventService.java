@@ -49,7 +49,31 @@ public class EventService {
         LocalDateTime endOfMonth = date.withDayOfMonth(date.toLocalDate().lengthOfMonth()).toLocalDate().atTime(23, 59, 59);
         return eventRepository.findByUserIdAndStartDateBetween(userId, startOfMonth, endOfMonth);
     }
+
+    public Event updateEvent(Long eventId, Event updatedEvent) {
+        // Check if the event with eventId exists
+        Event existingEvent = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        // Update the fields of existingEvent with the fields of updatedEvent
+        existingEvent.setTitle(updatedEvent.getTitle());
+        existingEvent.setStartDate(updatedEvent.getStartDate());
+        existingEvent.setEndDate(updatedEvent.getEndDate());
+
+        // Save the updated event
+        return eventRepository.save(existingEvent);
+    }
+
+    public void deleteEvent(Long eventId) {
+        // Check if the event with eventId exists
+        Event existingEvent = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        // Delete the event
+        eventRepository.delete(existingEvent);
+    }
     public List<Event> getAllEvents(Long userId) {
         return eventRepository.findByUserId(userId);
     }
+
 }

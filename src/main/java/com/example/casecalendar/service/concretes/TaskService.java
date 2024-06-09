@@ -34,4 +34,30 @@ public class TaskService {
         LocalDateTime endOfMonth = date.withDayOfMonth(date.toLocalDate().lengthOfMonth()).toLocalDate().atTime(23, 59, 59);
         return taskRepository.findByUserIdAndStartDateBetween(userId, startOfMonth, endOfMonth);
     }
+    public Task updateTask(Long taskId, Task updatedTask) {
+
+        Task existingTask = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+
+        existingTask.setTitle(updatedTask.getTitle());
+        existingTask.setStartDate(updatedTask.getStartDate());
+        existingTask.setEndDate(updatedTask.getEndDate());
+
+
+        return taskRepository.save(existingTask);
+    }
+
+    public void deleteTask(Long taskId) {
+
+        Task existingTask = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+        // Delete the task
+        taskRepository.delete(existingTask);
+    }
+
+    public List<Task> getAllTasks(Long userId) {
+        return taskRepository.findByUserId(userId);
+    }
 }
